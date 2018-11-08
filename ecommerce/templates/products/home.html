@@ -1,0 +1,120 @@
+<style>
+#wrapper {
+    margin:auto;
+    width:88%;
+}
+div.gallery {
+    border: 1px solid #ccc;
+}
+div.gallery:hover {
+    border: 1px solid transparent;
+		box-shadow: 0 0 10px #ccc;
+}
+div.gallery img {
+
+  max-height:100%
+}
+div.desc {
+    padding: 2px;
+    text-align: center;
+		text-decoration: none;
+}
+.mySlides {
+    height: 200px;
+    width:100%;
+}
+@media screen and (max-width: 768px) {
+  .mySlides {
+    visibility: hidden;
+    clear: both;
+    float: left;
+    width: 100%;
+    display: none !important;;
+  }
+}
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+</style>
+
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_title %}
+Welcome to
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+
+{% for slider in sliders %}
+<img class="mySlides" src="{{ MEDIA_URL }}{{ slider.imageslide.name }}">
+
+{% endfor %}
+
+<br></br>
+
+<script>
+var myIndex = 0;
+carousel();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";
+    }
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}
+    x[myIndex-1].style.display = "block";
+    setTimeout(carousel, 2000); // Change image every 2 seconds
+}
+</script>
+
+<div id="wrapper" >
+<div class='row'  >
+
+{% for product in products %}
+		<div class='col-sm-3' >
+			<div class="pic">
+					{% if product.productimage_set.all %}
+
+							{% for item in product.productimage_set.all %}
+
+							{% if item.featured %}
+              <div class="img-responsive">
+                <div class="gallery">
+                <a href='{{ product.get_absolute_url }}'>
+                  <div class='background_img_thumb' style="height:260px;max-width:100%;background-image: url('{{ MEDIA_URL }}{{ item.image }}');"></div>
+                </a>
+								<div class="desc"> <h3>{{ product.title }}</h3>
+								<p>₹{{ product.price}}</p></div>
+                </div>
+              </div>
+							<!-- <img class='img-responsive' src="{{ MEDIA_URL }}{{ item.image }}" /> -->
+							{% endif %}
+							{% endfor %}
+
+					{% else %}
+					<div class="img-responsive">
+						<div class="gallery">
+						<a href='{{ product.get_absolute_url }}'>
+							<div class='background_img_thumb' style="height:260px;max-width:100%;background-image: url('{{ MEDIA_URL }}placeholder.jpg');"></div>
+						</a>
+						<div class="desc"> <h3>{{ product.title }}</h3>
+						<p>₹{{ product.price}}</p></div>
+						</div>
+						</div>
+					{% endif %}
+		   	 </div>
+		</div>
+
+{% cycle "" "" "" "</div><br/><hr/><div class='row'>" %}
+{% endfor %}
+
+</div>
+</div>
+
+{% endblock %}

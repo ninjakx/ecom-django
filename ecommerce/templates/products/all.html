@@ -1,0 +1,92 @@
+<style>
+div.gallery {
+    border: 1px solid #ccc;
+}
+div.gallery:hover {
+    border: 1px solid transparent;
+		box-shadow: 0 0 10px #ccc;
+}
+div.gallery img {
+
+  max-height:100%
+}
+div.desc {
+    padding: 2px;
+    text-align: center;
+		text-decoration: none;
+}
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+  {% include 'topbar.html' %}
+
+
+    {% block content %}
+
+
+{% load staticfiles %}
+
+
+
+<div class='row'>
+{% for product in products %}
+		<div class='col-sm-2'>
+			<div class="thumbnail">
+					{% if product.productimage_set.all %}
+
+							{% for item in product.productimage_set.all %}
+
+							{% if item.featured %}
+
+							<div class="img-responsive">
+                <div class="gallery">
+                <a href='{{ product.get_absolute_url }}'>
+                  <div class='background_img_thumb' style="height:100px;max-width:100%;background-image: url('{{ MEDIA_URL }}{{ item.image }}');"></div>
+                </a>
+								<div class="desc"> <h3>{{ product.title }}</h3>
+								<p>₹{{ product.price}}</p></div>
+                </div>
+              </div>
+
+
+
+
+
+
+							<!-- <img class='img-responsive' src="{{ MEDIA_URL }}{{ item.image }}" /> -->
+							{% endif %}
+
+							{% endfor %}
+
+					{% else %}
+					<div class="img-responsive">
+						<div class="gallery">
+						<a href='{{ product.get_absolute_url }}'>
+							<div class='background_img_thumb' style="height:100px;max-width:100%;background-image: url('{{ MEDIA_URL }}placeholder.jpg');"></div>
+						</a>
+						<div class="desc"> <h3>{{ product.title }}</h3>
+						<p>₹{{ product.price}}</p></div>
+						</div>
+						</div>
+					{% endif %}
+
+		   	 </div>
+
+
+		</div>
+
+{% cycle "" "" "" "" "" "</div><br/><hr/><div class='row'>" %}
+{% endfor %}
+
+</div>
+
+{% endblock %}
